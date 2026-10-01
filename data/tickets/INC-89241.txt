@@ -1,0 +1,20 @@
+[Ticket ID: INC-89241]
+Customer: Global Remote Engineering Team (42 users impacted)
+Severity: P2 - High
+Symptoms:
+Users reporting sudden disconnection during Cisco AnyConnect client negotiation on gateway us-east-vpn.enterprise.net.
+Error message popup on client: "The VPN connection failed due to unsuccessful handshake or timeout. Error code 412."
+Client version: AnyConnect 4.10.05085 on Windows 11 & macOS Sonoma.
+
+Diagnostic Analysis & Logs:
+- Checked ASA 5585-X firewall logs: DTLS handshake packet drops observed on UDP 443.
+- Traceroute showed path MTU was clamped down to 1380 bytes due to upstream ISP fiber routing changes.
+- Default AnyConnect MTU was negotiated at 1500 bytes, causing fragmented UDP packets that intermediate routers dropped silently.
+- Ping with Don't Fragment flag (ping -f -l 1400 10.200.0.1) consistently failed.
+
+Resolution Applied:
+1. Reconfigured the tunnel group profile 'Enterprise-Remote-Users' to force MTU clamping to 1360 bytes.
+2. Enabled dynamic MTU discovery on ASA: 'sysopt connection tcpmss 1360'.
+3. Pushed client profile update setting '<MTU>1360</MTU>' in AnyConnect Profile.xml.
+4. Tested handshake across 5 regional test workstations; TLS and DTLS sessions established in <1.2 seconds without timeout.
+5. All 42 users reconnected successfully. Closed ticket after 2 hours monitoring.

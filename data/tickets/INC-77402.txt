@@ -1,0 +1,17 @@
+[Ticket ID: INC-77402]
+System: PostgreSQL 15.4 RDS Primary and Read Replicas (db-replica-02, db-replica-03)
+Severity: P2 - High
+Symptoms:
+Analytics microservice threw timeout exceptions (HTTP 504) due to read queries routing to replica-02 being stale by >180 seconds.
+CloudWatch Alarm 'PostgresReplicaLag' alerted at 220s lag (threshold: 30s).
+
+Investigation & Root Cause:
+- Long-running ETL bulk load query on the primary table 'audit_events' held an AccessExclusiveLock on partition partitions_2026_q3.
+- Wal receiver process on replica-02 was blocked by conflicting long analytical read queries (PID 48192 running for 28 minutes).
+- 'max_standby_streaming_delay' was configured at 30s, causing recovery conflicts and eventual cancellation of queries.
+
+Resolution Applied:
+1. Cancelled blocking analytical query PID 48192 via pg_cancel_backend().
+2. Adjusted 'hot_standby_feedback = on' on read replicas to prevent vacuum cleanup on primary of rows still needed by standby.
+3. Partitioned large writes into smaller 5,000-row chunks with explicit commit intervals.
+4. Replication lag dropped back to 0.4s within 4 minutes.

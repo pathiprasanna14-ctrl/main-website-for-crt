@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Knowledge Base Article Generator | Enterprise IT Support</title>
+  <meta name="description" content="Enterprise SaaS UI for AI Knowledge Base Article Generator - Transforming resolved IT support tickets and technical documentation into standard KB articles.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- App Container -->
+  <div class="app-layout" id="appLayout">
+    
+    <!-- Mobile Backdrop -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- 1. Responsive Sidebar Navigation -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <div class="brand-logo">
+          <div class="logo-icon-wrapper">
+            <svg class="logo-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+            <div class="logo-sparkle"></div>
+          </div>
+          <div class="brand-text-group">
+            <span class="brand-name">CogniBase <span class="brand-badge">AI</span></span>
+            <span class="brand-sub">KB Article Generator</span>
+          </div>
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close Sidebar">
+          <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Quick Action / Generate CTA in Sidebar -->
+      <div class="sidebar-cta-wrap">
+        <button class="btn-sidebar-create" id="sidebarGenerateCta">
+          <svg class="cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/>
+          </svg>
+          <span>Generate Article</span>
+        </button>
+      </div>
+
+      <!-- Sidebar Navigation Menu (Requirement 1) -->
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">WORKSPACE MENU</div>
+        <ul class="nav-menu">
+          <li class="nav-item">
+            <button class="nav-link active" data-view="dashboard" id="nav-dashboard">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect width="7" height="9" x="3" y="3" rx="1"/>
+                <rect width="7" height="5" x="14" y="3" rx="1"/>
+                <rect width="7" height="9" x="14" y="12" rx="1"/>
+                <rect width="7" height="5" x="3" y="16" rx="1"/>
+              </svg>
+              <span class="nav-label">Dashboard</span>
+              <span class="nav-tag live-tag">Live</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-view="generate" id="nav-generate">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/>
+              </svg>
+              <span class="nav-label">Generate Article</span>
+              <span class="nav-tag new-tag">AI</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-view="history" id="nav-history">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                <path d="M6 6h10"/>
+                <path d="M6 10h10"/>
+                <path d="M6 14h6"/>
+              </svg>
+              <span class="nav-label">Article History</span>
+              <span class="nav-counter" id="historyCounterBadge">24</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-view="documentation" id="nav-documentation">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                <polyline points="14 2 14 8 20 8"/>
+                <line x1="16" y1="13" x2="8" y2="13"/>
+                <line x1="16" y1="17" x2="8" y2="17"/>
+                <line x1="10" y1="9" x2="8" y2="9"/>
+              </svg>
+              <span class="nav-label">Documentation</span>
+              <span class="nav-counter" id="docsCounterBadge">12</span>
+            </button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" data-view="settings" id="nav-settings">
+              <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              <span class="nav-label">Settings</span>
+            </button>
+          </li>
+        </ul>
+
+        <div class="nav-section-label" style="margin-top: 1.75rem;">CONNECTED SOURCES</div>
+        <div class="sidebar-source-list">
+          <div class="source-item">
+            <span class="source-status-dot online"></span>
+            <span class="source-name">ITSM Ticket Queue</span>
+            <span class="source-badge">Active</span>
+          </div>
+          <div class="source-item">
+            <span class="source-status-dot online"></span>
+            <span class="source-name">Technical Runbooks (RAG)</span>
+            <span class="source-badge">12 Files</span>
+          </div>
+          <div class="source-item">
+            <span class="source-status-dot standby"></span>
+            <span class="source-name">Confluence KB Export</span>
+            <span class="source-badge">Ready</span>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="sidebar-footer">
+        <div class="ai-status-card">
+          <div class="ai-status-header">
+            <span class="ai-pulse"></span>
+            <span class="ai-status-text">AI Synthesis Engine</span>
+            <span class="ai-version">v2.4</span>
+          </div>
+          <p class="ai-status-sub">Ready for Ticket-to-KB synthesis</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Shell -->
+    <div class="main-shell">
+      
+      <!-- Top Navigation Header (Requirement 7) -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="menu-toggle-btn" id="menuToggleBtn" aria-label="Toggle navigation menu">
+            <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          
+          <div class="header-breadcrumb">
+            <span class="breadcrumb-root">AI Knowledge Base</span>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current" id="headerCurrentView">Dashboard</span>
+          </div>
+        </div>
+
+        <!-- Global Search Bar -->
+        <div class="header-search-wrap">
+          <div class="header-search">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.3-4.3"/>
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Search articles, resolved tickets, error codes... (Ctrl + K)" autocomplete="off">
+            <kbd class="search-kbd">⌘K</kbd>
+          </div>
+          <div class="search-results-dropdown" id="searchResultsDropdown">
+            <div class="search-results-header">Search Results</div>
+            <div class="search-results-list" id="searchResultsList"></div>
+          </div>
+        </div>
+
+        <!-- Header Right Actions & Profile -->
+        <div class="header-right">
+          
+          <!-- Quick Generate Button -->
+          <button class="btn btn-primary btn-sm header-action-btn" id="headerNewArticleBtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14"/>
+            </svg>
+            <span class="header-btn-text">New Article</span>
+          </button>
+
+          <!-- Theme Toggle Button -->
+          <button class="icon-btn theme-toggle-btn" id="themeToggleBtn" title="Toggle Light / Dark mode" aria-label="Toggle theme">
+            <svg class="sun-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"/>
+              <line x1="12" y1="1" x2="12" y2="3"/>
+              <line x1="12" y1="21" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="3" y2="12"/>
+              <line x1="21" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+          </button>
+
+          <!-- Notification Bell -->
+          <div class="notifications-wrapper">
+            <button class="icon-btn notif-btn" id="notifBtn" title="Notifications" aria-label="View notifications">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/>
+                <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/>
+              </svg>
+              <span class="notif-badge">3</span>
+            </button>
+            <div class="notif-dropdown" id="notifDropdown">
+              <div class="notif-header">
+                <h4>System Notifications</h4>
+                <button class="btn-text" id="markAllReadBtn">Mark read</button>
+              </div>
+              <ul class="notif-list">
+                <li class="notif-item unread">
+                  <div class="notif-dot"></div>
+                  <div class="notif-content">
+                    <p class="notif-title">Documentation Vector Index Updated</p>
+                    <span class="notif-time">10 minutes ago</span>
+                  </div>
+                </li>
+                <li class="notif-item unread">
+                  <div class="notif-dot"></div>
+                  <div class="notif-content">
+                    <p class="notif-title">Review approved: AnyConnect VPN Error 412</p>
+                    <span class="notif-time">1 hour ago</span>
+                  </div>
+                </li>
+                <li class="notif-item unread">
+                  <div class="notif-dot"></div>
+                  <div class="notif-content">
+                    <p class="notif-title">New resolved ticket batch synced (14 tickets)</p>
+                    <span class="notif-time">3 hours ago</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- User Profile Area -->
+          <div class="user-profile-wrapper">
+            <button class="user-profile-btn" id="userProfileBtn" aria-label="User menu">
+              <div class="avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Alex Rivera" class="user-avatar">
+                <span class="user-status-dot online"></span>
+              </div>
+              <div class="user-meta">
+                <span class="user-name">Alex Rivera</span>
+                <span class="user-role">IT Lead / SME</span>
+              </div>
+              <svg class="chevron-down" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="m6 9 6 6 6-6"/>
+              </svg>
+            </button>
+            
+            <div class="profile-dropdown" id="profileDropdown">
+              <div class="profile-menu-header">
+                <strong>Alex Rivera</strong>
+                <small>alex.rivera@enterprise-it.org</small>
+                <div class="badge-role">Admin / SME Reviewer</div>
+              </div>
+              <div class="profile-menu-divider"></div>
+              <button class="profile-menu-item" onclick="app.navigateTo('settings')">
+                <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                Workspace Settings
+              </button>
+              <button class="profile-menu-item text-danger" onclick="app.showToast('Profile session active (Enterprise Demo)')">
+                <svg viewBox="0 0 24 24" width="15" height="15" stroke="currentColor" stroke-width="2" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                Sign Out
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+      <!-- Main Body Container: Dynamic SPA Views -->
+      <main class="main-body" id="mainBody">
+
+        <!-- ============================================== -->
+        <!-- VIEW 1: DASHBOARD (Requirement 2 & 4)          -->
+        <!-- ============================================== -->
+        <section class="view-section active" id="view-dashboard">
+          
+          <!-- Hero / Welcome Banner -->
+          <div class="dashboard-hero-card">
+            <div class="hero-content">
+              <div class="hero-badge">
+                <span class="sparkle-dot"></span>
+                <span>Enterprise IT Knowledge Hub</span>
+              </div>
+              <h1 class="hero-title">AI Knowledge Base Article Generator</h1>
+              <p class="hero-desc">
+                Transform resolved IT technical support tickets and engineering runbooks into standardized, searchable knowledge base articles with zero manual drafting.
+              </p>
+              <div class="hero-actions">
+                <button class="btn btn-primary" onclick="app.navigateTo('generate')">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/>
+                  </svg>
+                  Generate Knowledge Base Article
+                </button>
+                <button class="btn btn-secondary" onclick="app.navigateTo('documentation')">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                  Manage Technical Docs
+                </button>
+              </div>
+            </div>
+            <div class="hero-graphic">
+              <div class="pulse-orbit">
+                <div class="orbit-center">
+                  <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                  </svg>
+                </div>
+                <div class="orbit-node node-1">Resolved Ticket</div>
+                <div class="orbit-node node-2">Doc Reference</div>
+                <div class="orbit-node node-3">Standard KB</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Core Metrics Required by prompt: Total Resolved Tickets, Generated Articles, Pending Reviews, Available Documents -->
+          <div class="metrics-grid">
+            
+            <!-- Metric 1: Total Resolved Tickets -->
+            <div class="metric-card">
+              <div class="metric-header">
+                <div class="metric-icon-wrap icon-blue">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                </div>
+                <span class="metric-trend positive">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="18 15 12 9 6 15"/>
+                  </svg>
+                  +14.2%
+                </span>
+              </div>
+              <div class="metric-body">
+                <span class="metric-label">Total Resolved Tickets</span>
+                <h2 class="metric-value" id="statResolvedTickets">1,428</h2>
+                <div class="metric-footer-note">
+                  <span>From Jira, ServiceNow & IT queues</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metric 2: Generated Articles -->
+            <div class="metric-card">
+              <div class="metric-header">
+                <div class="metric-icon-wrap icon-purple">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+                    <line x1="8" y1="7" x2="16" y2="7"/>
+                    <line x1="8" y1="11" x2="16" y2="11"/>
+                  </svg>
+                </div>
+                <span class="metric-trend positive">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="18 15 12 9 6 15"/>
+                  </svg>
+                  +28 this mo
+                </span>
+              </div>
+              <div class="metric-body">
+                <span class="metric-label">Generated Articles</span>
+                <h2 class="metric-value" id="statGeneratedArticles">342</h2>
+                <div class="metric-footer-note">
+                  <span>98.4% average citation accuracy</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metric 3: Pending Reviews -->
+            <div class="metric-card">
+              <div class="metric-header">
+                <div class="metric-icon-wrap icon-amber">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+                <span class="metric-trend warning">
+                  <span>Action required</span>
+                </span>
+              </div>
+              <div class="metric-body">
+                <span class="metric-label">Pending Reviews</span>
+                <h2 class="metric-value" id="statPendingReviews">7</h2>
+                <div class="metric-footer-note">
+                  <span>Requires SME verification</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Metric 4: Available Documents -->
+            <div class="metric-card">
+              <div class="metric-header">
+                <div class="metric-icon-wrap icon-emerald">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+                    <ellipse cx="12" cy="5" rx="9" ry="3"/>
+                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+                    <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>
+                  </svg>
+                </div>
+                <span class="metric-trend neutral">
+                  <span>Active RAG</span>
+                </span>
+              </div>
+              <div class="metric-body">
+                <span class="metric-label">Available Documents</span>
+                <h2 class="metric-value" id="statAvailableDocs">12</h2>
+                <div class="metric-footer-note">
+                  <span>4,820 vector chunks indexed</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Dashboard Content: Recent Generated Articles & Simple Activity Section (Requirement 2) -->
+          <div class="dashboard-columns">
+            
+            <!-- Left: Recent Generated Articles -->
+            <div class="card dash-table-card">
+              <div class="card-header">
+                <div class="card-title-group">
+                  <h3 class="card-title">Recent Generated Articles</h3>
+                  <p class="card-subtitle">Latest articles synthesized from resolved technical tickets</p>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="app.navigateTo('history')">
+                  View All History
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </button>
+              </div>
+              
+              <div class="table-responsive">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Article Title</th>
+                      <th>Category</th>
+                      <th>Created Date</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="recentArticlesTableBody">
+                    <!-- Populated via script.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Right Column: Simple Activity Section & Tickets Queue -->
+            <div class="dash-side-col">
+              
+              <!-- Simple Activity Section (Requirement 2) -->
+              <div class="card activity-card">
+                <div class="card-header">
+                  <div class="card-title-group">
+                    <h3 class="card-title">Recent Activity</h3>
+                    <p class="card-subtitle">System actions & workflow updates</p>
+                  </div>
+                </div>
+                <div class="activity-timeline" id="dashboardActivityList">
+                  <!-- Populated via script.js -->
+                </div>
+              </div>
+
+              <!-- Quick Ticket Ingestion Box -->
+              <div class="card queue-preview-card">
+                <div class="card-header">
+                  <h3 class="card-title">Ready for Generation</h3>
+                  <span class="badge badge-primary">3 Tickets</span>
+                </div>
+                <div class="quick-ticket-list" id="quickTicketList">
+                  <!-- Populated via script.js -->
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 2: GENERATE ARTICLE (Requirement 3 & 4)   -->
+        <!-- ============================================== -->
+        <section class="view-section" id="view-generate">
+          
+          <!-- Generator Page Header -->
+          <div class="section-page-header">
+            <div>
+              <h1 class="page-title">Generate Knowledge Base Article</h1>
+              <p class="page-subtitle">
+                Provide a resolved technical ticket and supporting documentation to generate a standard ITIL KB article.
+              </p>
+            </div>
+            <!-- Preset Scenario Loader for Demo Testing -->
+            <div class="template-selector-wrap">
+              <label for="sampleTemplateSelect" class="template-label">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                Load Sample Scenario:
+              </label>
+              <select id="sampleTemplateSelect" class="form-select template-dropdown">
+                <option value="">-- Choose a realistic sample ticket --</option>
+                <option value="vpn-timeout">1. Cisco AnyConnect VPN Timeout (Error 412)</option>
+                <option value="postgres-lag">2. PostgreSQL Replica Read-Lag on Query Spikes</option>
+                <option value="k8s-oom">3. Kubernetes Pod CrashLoopBackOff: OOMKilled</option>
+                <option value="outlook-auth">4. Outlook Modern Auth Token Loop (Azure AD)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Main Generator Split Layout -->
+          <div class="generator-layout">
+            
+            <!-- Left Column: Input Form (Requirement 3) -->
+            <div class="generator-input-col">
+              <div class="card form-card">
+                
+                <!-- Article Title Field (Requirement 3) -->
+                <div class="form-group">
+                  <div class="form-label-row">
+                    <label for="articleTitleInput" class="form-label">Article Title <span class="required">*</span></label>
+                    <button type="button" class="btn-text-sm" id="btnAutoSuggestTitle">
+                      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/>
+                      </svg>
+                      Auto-Suggest Title
+                    </button>
+                  </div>
+                  <input 
+                    type="text" 
+                    id="articleTitleInput" 
+                    class="form-input" 
+                    placeholder="e.g. Resolving Cisco AnyConnect VPN Error 412: Handshake Timeout & Path MTU"
+                    value="Resolving Cisco AnyConnect VPN Error 412: Handshake Timeout on Remote Gateways"
+                  >
+                </div>
+
+                <!-- Meta Selectors (Category & Domain) -->
+                <div class="form-row-2">
+                  <div class="form-group">
+                    <label for="articleCategorySelect" class="form-label">Category</label>
+                    <select id="articleCategorySelect" class="form-select">
+                      <option value="Network & VPN" selected>Network & VPN Infrastructure</option>
+                      <option value="Cloud & Kubernetes">Cloud & Kubernetes</option>
+                      <option value="Databases & Storage">Databases & Storage</option>
+                      <option value="Identity & Security">Identity & Security (SSO/MFA)</option>
+                      <option value="Workstation & Software">Workstation & Software</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="articleAudienceSelect" class="form-label">Target Audience</label>
+                    <select id="articleAudienceSelect" class="form-select">
+                      <option value="Tier 1/2 Support Engineers" selected>Tier 1/2 Support Engineers</option>
+                      <option value="End-Users (Self-Service)">End-Users (Self-Service)</option>
+                      <option value="DevOps & System Architects">DevOps & System Architects</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="divider-form"></div>
+
+                <!-- Resolved Technical Ticket Textarea (Requirement 3) -->
+                <div class="form-group">
+                  <div class="form-label-row">
+                    <label for="ticketTextarea" class="form-label">Resolved Technical Ticket <span class="required">*</span></label>
+                    <span class="char-count" id="ticketWordCount">438 words</span>
+                  </div>
+                  <textarea 
+                    id="ticketTextarea" 
+                    class="form-textarea code-look" 
+                    rows="9" 
+                    placeholder="Paste the resolved ticket thread, error messages, engineer troubleshooting logs, and final fix..."
+                  >[Ticket ID: INC-89241]
+Customer: Global Remote Engineering Team (42 users impacted)
+Severity: P2 - High
+Symptoms:
+Users reporting sudden disconnection during Cisco AnyConnect client negotiation on gateway us-east-vpn.enterprise.net.
+Error message popup on client: "The VPN connection failed due to unsuccessful handshake or timeout. Error code 412."
+Client version: AnyConnect 4.10.05085 on Windows 11 & macOS Sonoma.
+
+Diagnostic Analysis & Logs:
+- Checked ASA 5585-X firewall logs: DTLS handshake packet drops observed on UDP 443.
+- Traceroute showed path MTU was clamped down to 1380 bytes due to upstream ISP fiber routing changes.
+- Default AnyConnect MTU was negotiated at 1500 bytes, causing fragmented UDP packets that intermediate routers dropped silently.
+- Ping with Don't Fragment flag (ping -f -l 1400 10.200.0.1) consistently failed.
+
+Resolution Applied:
+1. Reconfigured the tunnel group profile 'Enterprise-Remote-Users' to force MTU clamping to 1360 bytes.
+2. Enabled dynamic MTU discovery on ASA: 'sysopt connection tcpmss 1360'.
+3. Pushed client profile update setting '<MTU>1360</MTU>' in AnyConnect Profile.xml.
+4. Tested handshake across 5 regional test workstations; TLS and DTLS sessions established in <1.2 seconds without timeout.
+5. All 42 users reconnected successfully. Closed ticket after 2 hours monitoring.</textarea>
+                </div>
+
+                <div class="divider-form"></div>
+
+                <!-- Documentation Upload Section (Requirement 3) -->
+                <div class="form-group">
+                  <label class="form-label">Documentation Upload Section</label>
+                  <div class="upload-dropzone" id="uploadDropzone">
+                    <input type="file" id="fileUploadInput" class="file-input-hidden" multiple accept=".pdf,.doc,.docx,.txt,.md">
+                    <div class="dropzone-content">
+                      <div class="dropzone-icon">
+                        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                          <polyline points="17 8 12 3 7 8"/>
+                          <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                      </div>
+                      <div class="dropzone-text">
+                        <p class="dropzone-title">Drag & drop technical documentation, or <span class="highlight-link">browse files</span></p>
+                        <p class="dropzone-hint">Upload runbooks, vendor manuals, or architecture docs (.pdf, .md, .docx, .txt)</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Uploaded Doc Chips -->
+                  <div class="attached-docs-wrapper">
+                    <span class="attached-docs-label">Referenced Technical Documents (3):</span>
+                    <div class="attached-docs-list" id="attachedDocsList">
+                      <div class="doc-chip">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        </svg>
+                        <span class="doc-chip-name">Cisco_ASA_AnyConnect_Config_v4.2.pdf</span>
+                        <span class="doc-chip-size">2.4 MB</span>
+                        <button type="button" class="doc-chip-remove" title="Remove attachment">&times;</button>
+                      </div>
+                      <div class="doc-chip">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        </svg>
+                        <span class="doc-chip-name">Enterprise_VPN_MTU_Runbook.md</span>
+                        <span class="doc-chip-size">145 KB</span>
+                        <button type="button" class="doc-chip-remove" title="Remove attachment">&times;</button>
+                      </div>
+                      <div class="doc-chip">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                        </svg>
+                        <span class="doc-chip-name">Global_Firewall_Rules_Matrix.docx</span>
+                        <span class="doc-chip-size">890 KB</span>
+                        <button type="button" class="doc-chip-remove" title="Remove attachment">&times;</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Generate Article Button & Clear Button (Requirement 3) -->
+                <div class="form-action-row">
+                  <button type="button" class="btn btn-primary btn-lg btn-generate" id="btnGenerateArticle">
+                    <span class="btn-text-content">
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/>
+                      </svg>
+                      Generate Article
+                    </span>
+                    <span class="btn-loading-content">
+                      <span class="spinner-dot"></span>
+                      Generating Knowledge Base Article...
+                    </span>
+                  </button>
+                  <button type="button" class="btn btn-secondary" id="btnClearForm" title="Clear all input fields">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
+                    </svg>
+                    Clear
+                  </button>
+                </div>
+
+                <!-- Generation Progress Feedback Box (Requirement 12 - demo state) -->
+                <div class="generation-progress-box" id="generationProgressBox">
+                  <div class="progress-header">
+                    <div class="progress-title-wrap">
+                      <span class="pulse-indicator"></span>
+                      <strong id="progressStepTitle">Parsing resolved ticket logs...</strong>
+                    </div>
+                    <span class="progress-pct" id="progressPercentage">35%</span>
+                  </div>
+                  <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBarFill" style="width: 35%"></div>
+                  </div>
+                  <div class="progress-steps-list">
+                    <div class="prog-step done" id="pStep1">✓ Ticket & Log Diagnostics Parsed</div>
+                    <div class="prog-step active" id="pStep2">⟳ Cross-referencing Documentation & Runbooks</div>
+                    <div class="prog-step pending" id="pStep3">○ Synthesizing Standard ITIL KB & Citations</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Right Column: Article Preview Section (Requirement 4) -->
+            <div class="generator-preview-col">
+              <div class="card preview-card" id="articlePreviewContainer">
+                
+                <!-- Preview Top Toolbar with Copy and Download buttons (Requirement 4) -->
+                <div class="preview-toolbar">
+                  <div class="preview-status-meta">
+                    <span class="badge badge-success" id="previewBadgeStatus">Preview Ready</span>
+                    <span class="meta-separator">•</span>
+                    <span class="preview-meta-date" id="previewMetaDate">Just now</span>
+                    <span class="meta-separator">•</span>
+                    <span class="preview-meta-cat" id="previewMetaCategory">Network & VPN</span>
+                  </div>
+                  <div class="preview-actions-group">
+                    <!-- Copy Article Button (Requirement 4) -->
+                    <button class="btn btn-secondary btn-sm" id="btnCopyArticle" title="Copy full article as Markdown">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                      </svg>
+                      Copy Article
+                    </button>
+                    <!-- Download Article Button (Requirement 4) -->
+                    <button class="btn btn-secondary btn-sm" id="btnDownloadArticle" title="Download article file (.md / .txt)">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                      </svg>
+                      Download Article
+                    </button>
+                    <button class="btn btn-primary btn-sm" id="btnSaveArticleToHistory" title="Save to Article History">
+                      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                        <polyline points="17 21 17 13 7 13 7 21"/>
+                        <polyline points="7 3 7 8 15 8"/>
+                      </svg>
+                      Save Article
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Preview Article Content Paper (Styled like Confluence/Notion enterprise article) -->
+                <article class="article-paper" id="articlePaper">
+                  
+                  <div class="article-header-meta">
+                    <div class="article-id-tag" id="articlePreviewId">KB-NET-89241</div>
+                    <div class="article-confidence-tag">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      Citation Grounding: <strong id="previewConfidenceVal">98.4%</strong>
+                    </div>
+                  </div>
+
+                  <!-- 1. Article Title (Requirement 4) -->
+                  <h1 class="article-preview-title" id="previewArticleTitle">
+                    Resolving Cisco AnyConnect VPN Error 412: Handshake Timeout & Path MTU Clamping
+                  </h1>
+
+                  <div class="article-author-row">
+                    <div class="author-info">
+                      <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60&auto=format&fit=crop&q=80" alt="Author" class="author-mini-avatar">
+                      <span>Synthesized by <strong>CogniBase AI</strong> • Reviewed by <strong>Alex Rivera</strong></span>
+                    </div>
+                    <div class="reading-time">
+                      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      <span>~3 min read</span>
+                    </div>
+                  </div>
+
+                  <div class="article-body-divider"></div>
+
+                  <!-- 2. Problem Description (Requirement 4) -->
+                  <section class="kb-section">
+                    <h3 class="kb-section-title">
+                      <svg class="kb-icon icon-warn" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                      </svg>
+                      Problem Description
+                    </h3>
+                    <div class="kb-section-content" id="previewProblemDesc">
+                      <p>
+                        Remote end-users initiating VPN connections via Cisco AnyConnect Client encounter immediate session termination during security parameter negotiation. The client client fails with error dialog:
+                      </p>
+                      <div class="error-callout">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                          <polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"/>
+                          <line x1="12" y1="8" x2="12" y2="12"/>
+                          <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <code>"The VPN connection failed due to unsuccessful handshake or timeout. Error code 412."</code>
+                      </div>
+                      <p>
+                        <strong>Impacted Systems:</strong> Endpoints connecting through ASA 5585-X firewalls via WAN/cellular transit where carrier Path MTU is constrained below 1500 bytes.
+                      </p>
+                    </div>
+                  </section>
+
+                  <!-- 3. Root Cause (Requirement 4) -->
+                  <section class="kb-section">
+                    <h3 class="kb-section-title">
+                      <svg class="kb-icon icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="16" x2="12" y2="12"/>
+                        <line x1="12" y1="8" x2="12.01" y2="8"/>
+                      </svg>
+                      Root Cause
+                    </h3>
+                    <div class="kb-section-content" id="previewRootCause">
+                      <p>
+                        Packet captures confirm a Path MTU Black Hole between the endpoint and the ASA headend:
+                      </p>
+                      <ul>
+                        <li>The AnyConnect client defaults to an Ethernet standard MTU of <strong>1500 bytes</strong> during DTLS tunnel initialization.</li>
+                        <li>Upstream carrier fiber transit clamped the route MTU to <strong>1380 bytes</strong>, while intermediate border firewalls dropped ICMP Type 3 ("Fragmentation Needed") notification packets.</li>
+                        <li>Large cryptographic certificate payload packets exceeded 1380 bytes and were dropped silently, triggering client-side timeout Error 412.</li>
+                      </ul>
+                    </div>
+                  </section>
+
+                  <!-- 4. Solution (Requirement 4) -->
+                  <section class="kb-section">
+                    <h3 class="kb-section-title">
+                      <svg class="kb-icon icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                      </svg>
+                      Solution
+                    </h3>
+                    <div class="kb-section-content" id="previewSolution">
+                      <p>
+                        Enforce TCP MSS clamping and configure the AnyConnect tunnel group MTU ceiling to <strong>1360 bytes</strong> on the gateway. Concurrently update the client profile XML to enable dynamic path MTU detection.
+                      </p>
+                    </div>
+                  </section>
+
+                  <!-- 5. Troubleshooting Steps (Requirement 4) -->
+                  <section class="kb-section">
+                    <h3 class="kb-section-title">
+                      <svg class="kb-icon icon-code" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="16 18 22 12 16 6"/>
+                        <polyline points="8 6 2 12 8 18"/>
+                      </svg>
+                      Troubleshooting Steps
+                    </h3>
+                    <div class="kb-section-content" id="previewTroubleshooting">
+                      <div class="steps-container">
+                        
+                        <div class="step-card">
+                          <div class="step-num">Step 1</div>
+                          <div class="step-body">
+                            <h4 class="step-heading">Probe Path MTU from Client Endpoint</h4>
+                            <p>Verify maximum packet transmission size without fragmentation to the VPN endpoint:</p>
+                            <div class="code-terminal">
+                              <div class="terminal-bar">
+                                <span>PowerShell</span>
+                                <button class="btn-copy-code" onclick="app.copyCodeSnippet(this)">Copy</button>
+                              </div>
+                              <pre><code># Test packet size with Don't Fragment flag (DF)
+ping -f -l 1372 us-east-vpn.enterprise.net</code></pre>
+                            </div>
+                            <small class="step-hint">If packet fragmentation error occurs, decrement packet size by 20 bytes until response ping succeeds.</small>
+                          </div>
+                        </div>
+
+                        <div class="step-card">
+                          <div class="step-num">Step 2</div>
+                          <div class="step-body">
+                            <h4 class="step-heading">Configure ASA Gateway MTU Clamping</h4>
+                            <p>Apply MTU policy adjustments on the Cisco ASA firewall CLI:</p>
+                            <div class="code-terminal">
+                              <div class="terminal-bar">
+                                <span>Cisco ASA CLI</span>
+                                <button class="btn-copy-code" onclick="app.copyCodeSnippet(this)">Copy</button>
+                              </div>
+                              <pre><code>ciscoasa(config)# group-policy Enterprise-Remote-Users attributes
+ciscoasa(config-group-policy)# mtu 1360
+ciscoasa(config-group-policy)# sysopt connection tcpmss 1360
+ciscoasa(config)# write memory</code></pre>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="step-card">
+                          <div class="step-num">Step 3</div>
+                          <div class="step-body">
+                            <h4 class="step-heading">Update AnyConnect Client Profile</h4>
+                            <p>Ensure client initialization parameters declare MTU restrictions in <code>Profile.xml</code>:</p>
+                            <div class="code-terminal">
+                              <div class="terminal-bar">
+                                <span>XML Profile Config</span>
+                                <button class="btn-copy-code" onclick="app.copyCodeSnippet(this)">Copy</button>
+                              </div>
+                              <pre><code>&lt;ClientInitialization&gt;
+  &lt;MTU&gt;1360&lt;/MTU&gt;
+  &lt;DynamicPathMTU&gt;true&lt;/DynamicPathMTU&gt;
+&lt;/ClientInitialization&gt;</code></pre>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="step-card">
+                          <div class="step-num">Step 4</div>
+                          <div class="step-body">
+                            <h4 class="step-heading">Verification & Post-Fix Checks</h4>
+                            <p>Reconnect the AnyConnect client and verify connection metrics:</p>
+                            <ul class="checklist">
+                              <li><label><input type="checkbox" checked> DTLS AES-256 cipher negotiated within 1.5s</label></li>
+                              <li><label><input type="checkbox" checked> Inbound/Outbound traffic counters incrementing without packet drops</label></li>
+                              <li><label><input type="checkbox" checked> Internal intranet gateway <code>10.200.0.1</code> responds &lt;15ms</label></li>
+                            </ul>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- 6. References / Citations (Requirement 4) -->
+                  <section class="kb-section">
+                    <h3 class="kb-section-title">
+                      <svg class="kb-icon icon-ref" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                      </svg>
+                      References / Citations
+                    </h3>
+                    <div class="kb-section-content" id="previewReferences">
+                      <div class="citations-grid">
+                        
+                        <div class="citation-card">
+                          <div class="citation-header">
+                            <span class="badge badge-ticket">Source Ticket</span>
+                            <span class="citation-tag">INC-89241</span>
+                          </div>
+                          <p class="citation-text">"AnyConnect client negotiation timeout on gateway us-east-vpn (Error 412)"</p>
+                          <small class="citation-meta">Resolved by Tier 3 NetOps Team</small>
+                        </div>
+
+                        <div class="citation-card">
+                          <div class="citation-header">
+                            <span class="badge badge-doc">Technical Manual</span>
+                            <span class="citation-tag">Doc Ref §4.2</span>
+                          </div>
+                          <p class="citation-text">Cisco ASA AnyConnect Configuration Guide (v4.2): Path MTU Discovery & DTLS Tuning</p>
+                          <small class="citation-meta">Pages 84-89 • Match Grounding: 99%</small>
+                        </div>
+
+                        <div class="citation-card">
+                          <div class="citation-header">
+                            <span class="badge badge-doc">Runbook</span>
+                            <span class="citation-tag">Runbook-NET-12</span>
+                          </div>
+                          <p class="citation-text">Enterprise VPN MTU Clamping Runbook: Carrier MPLS & Fiber Transit Norms</p>
+                          <small class="citation-meta">Section 3.1 • Updated Sep 2026</small>
+                        </div>
+
+                      </div>
+                    </div>
+                  </section>
+
+                </article>
+
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 3: ARTICLE HISTORY (Requirement 5)        -->
+        <!-- ============================================== -->
+        <section class="view-section" id="view-history">
+          
+          <div class="section-page-header">
+            <div>
+              <h1 class="page-title">Article History</h1>
+              <p class="page-subtitle">
+                Browse, search, filter, and inspect previously generated knowledge base articles.
+              </p>
+            </div>
+            <div class="header-actions">
+              <button class="btn btn-primary" onclick="app.navigateTo('generate')">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Generate Article
+              </button>
+            </div>
+          </div>
+
+          <!-- Search and Filter Functionality (Requirement 5) -->
+          <div class="card history-filter-card">
+            <div class="filter-row">
+              <div class="filter-search-box">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+                <input type="text" id="historyFilterInput" placeholder="Search by article title, ID, or keywords...">
+              </div>
+              <div class="filter-selects">
+                <select id="historyFilterCategory" class="form-select filter-select">
+                  <option value="all">All Categories</option>
+                  <option value="Network & VPN">Network & VPN</option>
+                  <option value="Cloud & Kubernetes">Cloud & Kubernetes</option>
+                  <option value="Databases & Storage">Databases & Storage</option>
+                  <option value="Identity & Security">Identity & Security</option>
+                  <option value="Workstation & Software">Workstation & Software</option>
+                </select>
+                <select id="historyFilterStatus" class="form-select filter-select">
+                  <option value="all">All Statuses</option>
+                  <option value="Published">Published</option>
+                  <option value="Pending Review">Pending Review</option>
+                  <option value="Draft">Draft</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Article History Table (Requirement 5: Article title, Date, Status, View button) -->
+          <div class="card history-table-card">
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Article Title</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                  <!-- Populated via script.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 4: DOCUMENTATION (Requirement 6)          -->
+        <!-- ============================================== -->
+        <section class="view-section" id="view-documentation">
+          
+          <div class="section-page-header">
+            <div>
+              <h1 class="page-title">Documentation Repository</h1>
+              <p class="page-subtitle">
+                Technical manuals, runbooks, and architecture guides referenced for knowledge synthesis and citations.
+              </p>
+            </div>
+            <!-- Upload Document Button (Requirement 6) -->
+            <button class="btn btn-primary" id="btnUploadDocModal">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="17 8 12 3 7 8"/>
+                <line x1="12" y1="3" x2="12" y2="15"/>
+              </svg>
+              Upload Document
+            </button>
+          </div>
+
+          <!-- Documentation Table (Requirement 6: Document name, Document type, Upload date, Status) -->
+          <div class="card doc-table-card">
+            <div class="card-header">
+              <div class="card-title-group">
+                <h3 class="card-title">Available Technical Documents</h3>
+                <p class="card-subtitle">Indexed and ready for citation grounding in generated articles</p>
+              </div>
+              <span class="badge badge-success" id="docCountBadge">12 Documents</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Document Name</th>
+                    <th>Document Type</th>
+                    <th>Size</th>
+                    <th>Upload Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="docsTableBody">
+                  <!-- Populated by script.js -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </section>
+
+
+        <!-- ============================================== -->
+        <!-- VIEW 5: SETTINGS (Requirement 7)               -->
+        <!-- ============================================== -->
+        <section class="view-section" id="view-settings">
+          
+          <div class="section-page-header">
+            <div>
+              <h1 class="page-title">Settings</h1>
+              <p class="page-subtitle">
+                Configure basic application preferences, knowledge formatting standards, and output settings.
+              </p>
+            </div>
+            <button class="btn btn-primary" id="btnSaveAllSettings">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Save Settings
+            </button>
+          </div>
+
+          <div class="settings-grid">
+            
+            <!-- Left: Settings Form Body -->
+            <div class="settings-col">
+              
+              <!-- General Settings Card -->
+              <div class="card settings-card">
+                <div class="settings-section-head">
+                  <div class="settings-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect width="20" height="14" x="2" y="5" rx="2"/>
+                      <line x1="2" y1="10" x2="22" y2="10"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="card-title">General Preferences</h3>
+                    <p class="card-subtitle">Basic workspace and organizational options</p>
+                  </div>
+                </div>
+
+                <div class="settings-form-body">
+                  <div class="form-group">
+                    <label class="form-label" for="settingOrgName">Organization / Team Name</label>
+                    <input type="text" id="settingOrgName" class="form-input" value="Enterprise IT Operations">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="settingDefaultAuthor">Default Reviewer / SME</label>
+                    <input type="text" id="settingDefaultAuthor" class="form-input" value="Alex Rivera (IT Lead)">
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="settingDefaultFormat">Article Export Format</label>
+                    <select id="settingDefaultFormat" class="form-select">
+                      <option value="markdown" selected>Standard Markdown (.md)</option>
+                      <option value="html">HTML5 Semantic Document (.html)</option>
+                      <option value="confluence">Atlassian Confluence Storage Format</option>
+                      <option value="servicenow">ServiceNow KB HTML</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Knowledge Base Generation Standards -->
+              <div class="card settings-card">
+                <div class="settings-section-head">
+                  <div class="settings-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 class="card-title">Article Generation Standards</h3>
+                    <p class="card-subtitle">Enforced standard sections in generated KB articles</p>
+                  </div>
+                </div>
+
+                <div class="settings-form-body">
+                  <div class="checkbox-grid">
+                    <label class="form-checkbox-label">
+                      <input type="checkbox" checked disabled> Problem Description (Mandatory)
+                    </label>
+                    <label class="form-checkbox-label">
+                      <input type="checkbox" checked disabled> Root Cause Analysis (Mandatory)
+                    </label>
+                    <label class="form-checkbox-label">
+                      <input type="checkbox" checked disabled> Solution / Workaround (Mandatory)
+                    </label>
+                    <label class="form-checkbox-label">
+                      <input type="checkbox" checked disabled> Troubleshooting Steps (Mandatory)
+                    </label>
+                    <label class="form-checkbox-label">
+                      <input type="checkbox" checked disabled> References & Document Citations (Mandatory)
+                    </label>
+                    <label class="form-checkbox-label">
+                      <input type="checkbox" checked id="settingChecklistToggle"> Include Interactive Checklist in Steps
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right: System Info & Reset -->
+            <div class="settings-side-col">
+              <div class="card">
+                <h3 class="card-title">System Information</h3>
+                <div class="system-meta-list">
+                  <div class="meta-item">
+                    <span class="label">Project</span>
+                    <strong class="val">AI KB Article Generator</strong>
+                  </div>
+                  <div class="meta-item">
+                    <span class="label">Frontend Version</span>
+                    <strong class="val">v1.2.0 (SPA)</strong>
+                  </div>
+                  <div class="meta-item">
+                    <span class="label">Mode</span>
+                    <strong class="val">Frontend Prototype UI</strong>
+                  </div>
+                  <div class="meta-item">
+                    <span class="label">Local Data Store</span>
+                    <strong class="val">Ready (Local / Sample)</strong>
+                  </div>
+                </div>
+
+                <div class="divider-form"></div>
+
+                <div class="preset-action-box">
+                  <h4>Demo Data Actions</h4>
+                  <p class="text-muted text-sm">Reset sample articles, tickets, and document records to initial state.</p>
+                  <button class="btn btn-secondary btn-sm" id="btnResetAllDemoData" style="margin-top: 0.75rem; width: 100%;">
+                    Restore Default Sample Data
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: View Full Article Modal                 -->
+  <!-- ============================================== -->
+  <div class="modal-overlay" id="articleModal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-header-meta">
+          <span class="badge badge-primary" id="modalArticleId">KB-NET-89241</span>
+          <span class="modal-category" id="modalArticleCategory">Network & VPN</span>
+        </div>
+        <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body" id="modalArticleContent">
+        <!-- Injected via script.js -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="modalCopyBtn">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
+          Copy Article
+        </button>
+        <button class="btn btn-primary" id="modalDoneBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODAL: Upload Document Modal                   -->
+  <!-- ============================================== -->
+  <div class="modal-overlay" id="uploadDocModal">
+    <div class="modal-dialog" style="max-width: 500px;">
+      <div class="modal-header">
+        <h3 class="card-title">Upload Technical Documentation</h3>
+        <button class="modal-close-btn" id="uploadDocModalCloseBtn" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label" for="modalDocName">Document Name</label>
+          <input type="text" id="modalDocName" class="form-input" placeholder="e.g. AWS_VPC_Peering_Guide_2026.pdf">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="modalDocType">Document Type</label>
+          <select id="modalDocType" class="form-select">
+            <option value="PDF">PDF Manual (.pdf)</option>
+            <option value="Markdown">Markdown (.md)</option>
+            <option value="DOCX">Word Document (.docx)</option>
+            <option value="TXT">Plain Text Runbook (.txt)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Select File</label>
+          <input type="file" id="modalDocFile" class="form-input" style="padding: 0.5rem;">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="modalCancelDocBtn">Cancel</button>
+        <button class="btn btn-primary" id="modalConfirmUploadBtn">Upload & Index</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================== -->
+  <!-- TOAST NOTIFICATION CONTAINER                   -->
+  <!-- ============================================== -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Application Script -->
+  <script src="script.js"></script>
+</body>
+</html>
